@@ -1,1 +1,0 @@
-# FRONTEND with React and TANSTACK Query
