@@ -1,6 +1,8 @@
 import { z } from "zod";
 import User from "../models/user.model.js";
+import bcrypt from "bcryptjs";
 
+//Validation
 const userSchema = z.object({
   email: z.string().email({ message: "Invalid Email Address!" }),
   password: z
@@ -31,7 +33,11 @@ export const register = async (req, res) => {
     if (user) {
       return res.status(400).json({ message: "User Already Registered" });
     }
-    const newUser = new User({ email, username, password });
+
+      //Hash Password
+    const hashPassword = await bcrypt.hash(password, 10);
+
+    const newUser = new User({ email, username, password: hashPassword });
     await newUser.save();
     if (newUser) {
       return res
