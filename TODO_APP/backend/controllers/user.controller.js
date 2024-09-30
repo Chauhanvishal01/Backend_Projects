@@ -34,7 +34,7 @@ export const register = async (req, res) => {
       return res.status(400).json({ message: "User Already Registered" });
     }
 
-      //Hash Password
+    //Hash Password
     const hashPassword = await bcrypt.hash(password, 10);
 
     const newUser = new User({ email, username, password: hashPassword });
@@ -48,5 +48,31 @@ export const register = async (req, res) => {
     return res.status(500).json({ message: "Internal Server Error" });
   }
 };
-export const login = async (req, res) => {};
+export const login = async (req, res) => {
+    const { email, password } = req.body;
+    console.log(email,password);
+    
+  try {
+    if (!email || !password) {
+      return res.status(400).json({ message: "All fields are required" });
+    }
+    const user = await User.findOne({ email }).select("+password");
+
+    // Check if user exists
+    if (!user) {
+        return res.status(400).json({ message: "Invalid email or password" });
+    }
+
+    // Compare the password
+    const comparedPassword = await bcrypt.compare(password, user.password);
+    if (!comparedPassword) {
+        return res.status(400).json({ message: "Invalid email or password" });
+    }
+    res.status(200).json({ message: "User logged In", user });
+  } catch (error) {
+      console.log(error);
+      
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
 export const logout = async (req, res) => {};
