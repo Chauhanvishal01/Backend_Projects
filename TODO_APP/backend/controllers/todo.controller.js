@@ -16,4 +16,11 @@ export const createTodo = async (req, res) => {
   }
 };
 
-
+export const getTodos = async (req, res) => {
+  try {
+    const todos = await Todo.find();
+    res.status(201).json({ message: "Todo Fetched successfully" ,todos} );
+  } catch (error) {
+    res.status(400).json({ message: "Error occuring while Fetching" });
+  }
+};
