@@ -44,3 +44,14 @@ export const updateTodo = async (req, res) => {
     res.status(400).json({ message: "Error occuring while Updating" });
   }
 };
+
+export const deleteTodo = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    await Todo.findByIdAndDelete(id);
+    res.status(201).json({ message: "Todo Deleted Successfully" });
+  } catch (error) {
+    res.status(400).json({ message: "Error occuring while Updating" });
+  }
+};
