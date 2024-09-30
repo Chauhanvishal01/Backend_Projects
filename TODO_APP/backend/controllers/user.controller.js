@@ -1,6 +1,7 @@
 import { z } from "zod";
 import User from "../models/user.model.js";
 import bcrypt from "bcryptjs";
+import { generateToken } from "../utils/jwtToken.js";
 
 //Validation
 const userSchema = z.object({
@@ -40,18 +41,19 @@ export const register = async (req, res) => {
     const newUser = new User({ email, username, password: hashPassword });
     await newUser.save();
     if (newUser) {
+      const token = await generateToken(newUser._id, res);
+
       return res
         .status(201)
-        .json({ message: "User Registered Successfully", newUser });
+        .json({ message: "User Registered Successfully", newUser, token });
     }
   } catch (error) {
     return res.status(500).json({ message: "Internal Server Error" });
   }
 };
 export const login = async (req, res) => {
-    const { email, password } = req.body;
-    console.log(email,password);
-    
+  const { email, password } = req.body;
+
   try {
     if (!email || !password) {
       return res.status(400).json({ message: "All fields are required" });
@@ -60,19 +62,29 @@ export const login = async (req, res) => {
 
     // Check if user exists
     if (!user) {
-        return res.status(400).json({ message: "Invalid email or password" });
+      return res.status(400).json({ message: "Invalid email or password" });
     }
 
     // Compare the password
     const comparedPassword = await bcrypt.compare(password, user.password);
     if (!comparedPassword) {
-        return res.status(400).json({ message: "Invalid email or password" });
+      return res.status(400).json({ message: "Invalid email or password" });
     }
-    res.status(200).json({ message: "User logged In", user });
+
+    const token = await generateToken(user._id, res);
+
+    res.status(200).json({ message: "User logged In", user, token });
   } catch (error) {
-      console.log(error);
-      
+    console.log(error);
+
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
-export const logout = async (req, res) => {};
+export const logout = async (req, res) => {
+  try {
+    res.clearCookie("jwt");
+    res.status(200).json({ message: "User logged Out Successfully" });
+  } catch (error) {
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
