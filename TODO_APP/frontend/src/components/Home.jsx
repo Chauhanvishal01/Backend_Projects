@@ -49,7 +49,24 @@ const Home = () => {
       setError("Failed to create Todo");
     }
   };
-
+  const updateTodo = async (id) => {
+    const todo = todos.find((todo) => todo._id === id);
+    try {
+      const res = await axios.post(
+        `/api/v1/todo/update/${id}`,
+        {
+          ...todo,
+          completed: !todo.completed,
+        },
+        {
+          withCredentials: true,
+        }
+      );
+      setTodos(todos.map((todo) => (todo._id === id ? res.data : todo)));
+    } catch (error) {
+      setError("Failed to fetch Todo Status");
+    }
+  };
   return <div>Home</div>;
 };
 
