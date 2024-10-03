@@ -4,7 +4,7 @@ const Home = () => {
   const [todos, setTodos] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
-
+  const [newTodo, setNewTodo] = useState("");
   useEffect(() => {
     const fetchTodos = async () => {
       try {
@@ -29,6 +29,26 @@ const Home = () => {
     };
     fetchTodos();
   }, []);
+
+  const createTodo = async () => {
+    if (!newTodo) return;
+    try {
+      const res = await axios.post(
+        `${import.meta.env.VITE_BACKEND_URL}/api/v1/todo/create`,
+        {
+          text: newTodo,
+          completed: false,
+        },
+        {
+          withCredentials: true,
+        }
+      );
+      setTodos([...todos, res.data]);
+      setNewTodo("");
+    } catch (error) {
+      setError("Failed to create Todo");
+    }
+  };
 
   return <div>Home</div>;
 };
