@@ -53,7 +53,7 @@ const Home = () => {
     const todo = todos.find((todo) => todo._id === id);
     try {
       const res = await axios.post(
-        `/api/v1/todo/update/${id}`,
+        `${import.meta.env.VITE_BACKEND_URL}/api/v1/todo/update/${id}`,
         {
           ...todo,
           completed: !todo.completed,
@@ -65,6 +65,20 @@ const Home = () => {
       setTodos(todos.map((todo) => (todo._id === id ? res.data : todo)));
     } catch (error) {
       setError("Failed to fetch Todo Status");
+    }
+  };
+
+  const deleteTodo = async (id) => {
+    try {
+      await axios.delete(
+        `${import.meta.env.VITE_BACKEND_URL}/api/v1/todo/delete/${id}`,
+        {
+          withCredentials: true,
+        }
+      );
+      setTodos(todos.filter((todo) => todo._id !== id));
+    } catch (error) {
+      setError("Failed to Delete Todo");
     }
   };
   return <div>Home</div>;
