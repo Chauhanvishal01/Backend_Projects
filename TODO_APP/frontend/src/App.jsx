@@ -4,6 +4,8 @@ import Home from "./components/Home";
 import Register from "./components/Register";
 import Login from "./components/Login";
 import PageNotFound from "./components/PageNotFound";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 const App = () => {
   return (
     <>
@@ -13,6 +15,7 @@ const App = () => {
         <Route path="/login" element={<Login />} />
         <Route path="*" element={<PageNotFound />} />
       </Routes>
+      <ToastContainer position="top-right"/>
     </>
   );
 };

@@ -21,7 +21,7 @@ export const register = async (req, res) => {
     const { username, email, password } = req.body;
 
     if (!email || !username || !password) {
-      return res.status(400).json({ message: "All fields are required" });
+      return res.status(400).json({ errors: "All fields are required" });
     }
 
     const validation = userSchema.safeParse({ email, username, password });
@@ -48,7 +48,7 @@ export const register = async (req, res) => {
         .json({ message: "User Registered Successfully", newUser, token });
     }
   } catch (error) {
-    return res.status(500).json({ message: "Internal Server Error" });
+    return res.status(500).json({ errors: "Internal Server Error" });
   }
 };
 export const login = async (req, res) => {

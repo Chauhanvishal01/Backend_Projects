@@ -1,9 +1,53 @@
+import axios from "axios";
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 const Register = () => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  const naviagteTo = useNavigate();
+
+  const handleRegister = async (e) => {
+    e.preventDefault();
+    try {
+      const { data } = await axios.post(
+        `${import.meta.env.VITE_BACKEND_URL}/api/v1/user/register`,
+        {
+          username,
+          email,
+          password,
+        },
+        {
+          withCredentials: true,
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      toast.success(data.message || "User registered");
+      setUsername("");
+      setEmail("");
+      setPassword("");
+      naviagteTo("/login");
+    } catch (error) {
+      let errorMessage = "User registration Failed";
+
+      if (error.response && error.response.data) {
+        const errors = error.response.data.errors;
+
+        if (Array.isArray(errors)) {
+          errorMessage = errors.join(", ");
+        } else if (typeof errors === "string") {
+          errorMessage = errors;
+        }
+      }
+
+      toast.error(errorMessage);
+    }
+  };
 
   return (
     <>
@@ -13,7 +57,7 @@ const Register = () => {
             <h2 className="text-3xl font-semibold m-5 text-center">
               Sign <span className="text-red-600">Up</span>
             </h2>
-            <form>
+            <form onSubmit={handleRegister}>
               <div className="mb-4">
                 <label for="" className="block mb-2 font-semibold">
                   Username
@@ -22,6 +66,8 @@ const Register = () => {
                   type="text"
                   placeholder="Enter your username..."
                   className="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-400"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
                 />
               </div>
               <div className="mb-4">
@@ -32,6 +78,8 @@ const Register = () => {
                   type="email"
                   placeholder="Enter your email..."
                   className="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-400"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                 />
               </div>
               <div className="mb-4">
@@ -42,10 +90,15 @@ const Register = () => {
                   type="password"
                   placeholder="Enter your password..."
                   className="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-400"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                 />
               </div>
 
-              <button className="w-full p-3 bg-green-400 text-white hover:bg-green-600 duration-200 rounded-xl font-semibold ">
+              <button
+                type="submit"
+                className="w-full p-3 bg-green-400 text-white hover:bg-green-600 duration-200 rounded-xl font-semibold "
+              >
                 Register
               </button>
               <p className="mt-4 text-center text-gray-600">
