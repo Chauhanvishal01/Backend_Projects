@@ -3,6 +3,7 @@ import axios from "axios";
 import { IoIosCreate } from "react-icons/io";
 import { MdDeleteForever } from "react-icons/md";
 import { IoLogOut } from "react-icons/io5";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
 const Home = () => {
   const [todos, setTodos] = useState([]);
   const [error, setError] = useState(null);
@@ -68,7 +69,7 @@ const Home = () => {
       );
       setTodos(todos.map((todo) => (todo._id === id ? res.data.todo : todo)));
     } catch (error) {
-      setError("Failed to fetch Todo Status");
+      setError("Failed to Update Todo");
     }
   };
 
@@ -112,38 +113,49 @@ const Home = () => {
             <IoIosCreate />
           </button>
         </div>
-        <ul className="space-y-2">
-          {todos.map((todo, idx) => (
-            <li
-              className="flex items-center justify-between p-3 bg-gray-200 rounded-md"
-              key={idx}
-            >
-              <div className="flex items-center">
-                <input
-                  type="checkbox"
-                  className="mr-2 cursor-pointer"
-                  checked={todo.completed}
-                  onChange={() => updateTodo(todo._id)}
-                />
-                <span
-                  className={` ${
-                    todo.completed
-                      ? "line-through text-gray-400 font-semibold "
-                      : "text-gray-600 font-semibold"
-                  }`}
-                >
-                  {todo.text}
-                </span>
-              </div>
-              <button
-                className="text-red-400 hover:text-red-600 text-3xl cursor-pointer"
-                onClick={() => deleteTodo(todo._id)}
+        {loading ? (
+          <div className="text-center">
+            <div className="rotate text-4xl text-center">
+              <AiOutlineLoading3Quarters />
+            </div>
+          </div>
+        ) : error ? (
+          <div className="text-red-500 text-xl">{error}</div>
+        ) : (
+          <ul className="space-y-2">
+            {todos.map((todo, idx) => (
+              <li
+                className="flex items-center justify-between p-3 bg-gray-200 rounded-md"
+                key={idx}
               >
-                <MdDeleteForever />
-              </button>
-            </li>
-          ))}
-        </ul>
+                <div className="flex items-center">
+                  <input
+                    type="checkbox"
+                    className="mr-2 cursor-pointer"
+                    checked={todo.completed}
+                    onChange={() => updateTodo(todo._id)}
+                  />
+                  <span
+                    className={` ${
+                      todo.completed
+                        ? "line-through text-gray-400 font-semibold "
+                        : "text-gray-600 font-semibold"
+                    }`}
+                  >
+                    {todo.text}
+                  </span>
+                </div>
+                <button
+                  className="text-red-400 hover:text-red-600 text-3xl cursor-pointer"
+                  onClick={() => deleteTodo(todo._id)}
+                >
+                  <MdDeleteForever />
+                </button>
+              </li>
+            ))}
+          </ul>
+        )}
+
         <p className="mt-4 text-center text-sm text-gray-700">
           {availabaleTodos} Todo Remaining
         </p>
