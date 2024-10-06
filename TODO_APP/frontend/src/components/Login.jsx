@@ -26,10 +26,10 @@ const Login = () => {
       );
 
       toast.success(data.message || "User Logged In");
-
+      localStorage.setItem("jwt", data.token);
+      naviagteTo("/");
       setEmail("");
       setPassword("");
-      naviagteTo("/");
     } catch (error) {
       let errorMessage = "User Login Failed";
 
@@ -94,7 +94,7 @@ const Login = () => {
                   className="text-blue-600 hover:text-blue-800 hover:underline"
                 >
                   {" "}
-                  SignUp 
+                  SignUp
                 </Link>{" "}
               </p>
             </form>

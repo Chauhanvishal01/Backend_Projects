@@ -28,10 +28,11 @@ const Register = () => {
       );
 
       toast.success(data.message || "User registered");
+      naviagteTo("/login");
+      localStorage.setItem("jwt", data.token);
       setUsername("");
       setEmail("");
       setPassword("");
-      naviagteTo("/login");
     } catch (error) {
       let errorMessage = "User registration Failed";
 

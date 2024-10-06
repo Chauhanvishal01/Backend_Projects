@@ -4,11 +4,15 @@ import { IoIosCreate } from "react-icons/io";
 import { MdDeleteForever } from "react-icons/md";
 import { IoLogOut } from "react-icons/io5";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 const Home = () => {
   const [todos, setTodos] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const [newTodo, setNewTodo] = useState("");
+  const naviagteTo = useNavigate();
+
   useEffect(() => {
     const fetchTodos = async () => {
       try {
@@ -87,6 +91,23 @@ const Home = () => {
     }
   };
 
+  const logout = async () => {
+    try {
+      await axios.post(
+        `${import.meta.env.VITE_BACKEND_URL}/api/v1/user/logout`
+      );
+      toast.success("User logged out Successfully");
+
+      naviagteTo("/login");
+
+      localStorage.removeItem("jwt");
+    } catch (error) {
+      console.log(error);
+
+      toast.error("Error while logged out");
+    }
+  };
+
   const availabaleTodos = todos.filter((todo) => !todo.completed).length;
 
   return (
@@ -159,7 +180,10 @@ const Home = () => {
         <p className="mt-4 text-center text-sm text-gray-700">
           {availabaleTodos} Todo Remaining
         </p>
-        <button className="mt-6 px-4 py-2 bg-blue-500 text-white text-2xl rounded-md hover:bg-blue-700 duration-500 mx-auto block">
+        <button
+          className="mt-6 px-4 py-2 bg-blue-500 text-white text-2xl rounded-md hover:bg-blue-700 duration-500 mx-auto block"
+          onClick={() => logout()}
+        >
           <IoLogOut />
         </button>
       </div>
