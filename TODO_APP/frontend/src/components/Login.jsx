@@ -6,7 +6,7 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const naviagteTo = useNavigate();
+  const navigateTo = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -27,7 +27,8 @@ const Login = () => {
 
       toast.success(data.message || "User Logged In");
       localStorage.setItem("jwt", data.token);
-      naviagteTo("/");
+      navigateTo("/");
+      console.log("Log In");
 
       setEmail("");
       setPassword("");

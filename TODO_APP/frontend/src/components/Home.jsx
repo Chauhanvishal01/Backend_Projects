@@ -94,13 +94,15 @@ const Home = () => {
   const logout = async () => {
     try {
       await axios.post(
-        `${import.meta.env.VITE_BACKEND_URL}/api/v1/user/logout`
+        `${import.meta.env.VITE_BACKEND_URL}/api/v1/user/logout`,
+        {
+          withCredentials: true,
+        }
       );
+      localStorage.removeItem("jwt");
       toast.success("User logged out Successfully");
 
       naviagteTo("/login");
-
-      localStorage.removeItem("jwt");
     } catch (error) {
       console.log(error);
 

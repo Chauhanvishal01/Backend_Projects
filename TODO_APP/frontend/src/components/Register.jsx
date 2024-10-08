@@ -28,8 +28,8 @@ const Register = () => {
       );
 
       toast.success(data.message || "User registered");
-      naviagteTo("/login");
       localStorage.setItem("jwt", data.token);
+      naviagteTo("/login");
       setUsername("");
       setEmail("");
       setPassword("");
