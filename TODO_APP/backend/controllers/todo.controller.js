@@ -5,6 +5,7 @@ export const createTodo = async (req, res) => {
   const todo = new Todo({
     text,
     completed,
+    user: req.user._id,
   });
 
   try {
@@ -18,7 +19,7 @@ export const createTodo = async (req, res) => {
 
 export const getTodos = async (req, res) => {
   try {
-    const todos = await Todo.find();
+    const todos = await Todo.find({ user: req.user._id });
     res.status(201).json({ message: "Todo Fetched successfully", todos });
   } catch (error) {
     res.status(400).json({ message: "Error occuring while Fetching" });
