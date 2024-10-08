@@ -28,6 +28,7 @@ const Login = () => {
       toast.success(data.message || "User Logged In");
       localStorage.setItem("jwt", data.token);
       naviagteTo("/");
+
       setEmail("");
       setPassword("");
     } catch (error) {
@@ -57,9 +58,7 @@ const Login = () => {
             </h2>
             <form onSubmit={handleLogin}>
               <div className="mb-4">
-                <label for="" className="block mb-2 font-semibold">
-                  Email
-                </label>
+                <label className="block mb-2 font-semibold">Email</label>
                 <input
                   type="email"
                   placeholder="Enter your email..."
@@ -69,9 +68,7 @@ const Login = () => {
                 />
               </div>
               <div className="mb-4">
-                <label for="" className="block mb-2 font-semibold">
-                  Password
-                </label>
+                <label className="block mb-2 font-semibold">Password</label>
                 <input
                   type="password"
                   placeholder="Enter your password..."
